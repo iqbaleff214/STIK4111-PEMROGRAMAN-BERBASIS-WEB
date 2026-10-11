@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA | Dasbor</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body id="dashboardPage">
+    <aside id="sidebar" class="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <div class="brand-box">
+                <div class="logo-icon flex items-center justify-center">
+                    <img src="assets/img/Logo_Universitas_Terbuka.svg" alt="Logo" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">SITTA</span>
+                    <span class="brand-subtitle">Informasi Bahan Ajar</span>
+                </div>
+            </div>
+            <!-- Sidebar Toggle Button -->
+            <button id="sidebarToggleButton" class="toggle-btn" aria-label="Toggle Navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M11 7l-5 5l5 5" /><path d="M17 7l-5 5l5 5" /></svg>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item" data-file="dashboard.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-2"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -1" /><path d="M4 15a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -3" /><path d="M14 6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -3" /><path d="M14 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -1" /></svg>
+                </div>
+                <span class="nav-label">Dasbor</span>
+            </a>
+
+            <a href="stock.html" class="nav-item" data-file="stock.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-library"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M11 7h5" /><path d="M11 10h6" /><path d="M11 13h3" /></svg>
+                </div>
+                <span class="nav-label">Stok Bahan Ajar</span>
+            </a>
+
+            <a href="tracking.html" class="nav-item" data-file="tracking.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" /><path d="M3 9l4 0" /></svg>
+                </div>
+                <span class="nav-label">Tracking Pengiriman</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer Profile -->
+        <div class="sidebar-footer">
+            <div class="avatar" id="userAvatar">M</div>
+            <div class="user-info">
+                <span class="user-name" id="userName">M. Iqbal Effendi</span>
+                <span class="user-email" id="userEmail">NIM: 054940372</span>
+            </div>
+            <button id="logoutButton" class="toggle-btn" aria-label="Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-door-exit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 12v.01" /><path d="M3 21h18" /><path d="M5 21v-16a2 2 0 0 1 2 -2h7.5m2.5 10.5v7.5" /><path d="M14 7h7m-3 -3l3 3l-3 3" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtext" id="greetingText">Selamat datang kembali!</p>
+            </div>
+
+            <div class="card-grid">
+                <!-- Materials Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Informasi Bahan Ajar</h2>
+                        <a class="toggle-btn" href="stock.html" style="color: var(--primary);">Lihat Katalog</a>
+                    </div>
+                    <!-- Summary -->
+                    <div class="summary-content">
+                        <div class="stat-row">
+                            <div class="stat-item">
+                                <span class="stat-value">5</span>
+                                <span class="stat-label">Total Judul BMP</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-item">
+                                <span class="stat-value" style="color: var(--primary);">2</span>
+                                <span class="stat-label">Bahan Ajar Baru</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tracking Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Tracking Pengiriman</h2>
+                        <a class="toggle-btn" href="tracking.html" style="color: var(--primary);">Riwayat</a>
+                    </div>
+                    <!-- Quick Track -->
+                    <div class="quick-track-content">
+                        <p class="text-sm text-muted mb-sm">Lacak status pengiriman Anda dengan cepat.</p>
+                        <form id="quickTrackForm" class="flex gap-sm mb-md">
+                            <input type="text" id="quickDoInput" class="form-input" placeholder="Masukkan Nomor DO..." required>
+                            <button type="submit" class="btn btn-primary">Lacak</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Section -->
+            <div class="card mb-xl">
+                <div class="card-header">
+                    <h2 class="card-title">Laporan</h2>
+                </div>
+                <div class="report-grid mt-sm">
+                    <a href="laporan-progress.html" class="report-tile">
+                        <div class="report-icon bg-blue-light">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </div>
+                        <div class="report-info">
+                            <h3 class="font-bold text-dark">Monitoring Progress DO</h3>
+                            <p class="text-sm text-muted mt-xs">Pantau status pergerakan dan kendala pengiriman bahan ajar dari hulu ke hilir.</p>
+                        </div>
+                        <div class="report-arrow">→</div>
+                    </a>
+
+                    <a href="laporan-rekap.html" class="report-tile">
+                        <div class="report-icon bg-yellow-light">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b38f00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        </div>
+                        <div class="report-info">
+                            <h3 class="font-bold text-dark">Rekap Bahan Ajar</h3>
+                            <p class="text-sm text-muted mt-xs">Unduh dan lihat laporan ketersediaan, stok, serta mutasi bahan ajar.</p>
+                        </div>
+                        <div class="report-arrow">→</div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- History Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Histori Transaksi Terakhir</h2>
+                    <a class="toggle-btn" href="histori.html" style="color: var(--primary);">Lihat Semua</a>
+                </div>
+                <div class="table-responsive mt-sm">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No. DO / Transaksi</th>
+                                <th>Ekspedisi</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>25 Agu 2025</td>
+                                <td class="font-medium text-dark">2023001234</td>
+                                <td>JNE</td>
+                                <td><span class="badge badge-warning">Dalam Perjalanan</span></td>
+                            </tr>
+                            <tr>
+                                <td>12 Agu 2025</td>
+                                <td class="font-medium text-dark">2023005678</td>
+                                <td>Pos Indonesia</td>
+                                <td><span class="badge badge-success">Dikirim</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

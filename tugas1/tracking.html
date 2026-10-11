@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA | Tracking Pengiriman</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body id="trackingPage">
+    <aside id="sidebar" class="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <div class="brand-box">
+                <div class="logo-icon flex items-center justify-center">
+                    <img src="assets/img/Logo_Universitas_Terbuka.svg" alt="Logo" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">SITTA</span>
+                    <span class="brand-subtitle">Informasi Bahan Ajar</span>
+                </div>
+            </div>
+            <!-- Sidebar Toggle Button -->
+            <button id="sidebarToggleButton" class="toggle-btn" aria-label="Toggle Navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M11 7l-5 5l5 5" /><path d="M17 7l-5 5l5 5" /></svg>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item" data-file="dashboard.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-2"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -1" /><path d="M4 15a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -3" /><path d="M14 6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -3" /><path d="M14 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -1" /></svg>
+                </div>
+                <span class="nav-label">Dasbor</span>
+            </a>
+
+            <a href="stock.html" class="nav-item" data-file="stock.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-library"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M11 7h5" /><path d="M11 10h6" /><path d="M11 13h3" /></svg>
+                </div>
+                <span class="nav-label">Stok Bahan Ajar</span>
+            </a>
+
+            <a href="tracking.html" class="nav-item" data-file="tracking.html">
+                <div class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" /><path d="M3 9l4 0" /></svg>
+                </div>
+                <span class="nav-label">Tracking Pengiriman</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer Profile -->
+        <div class="sidebar-footer">
+            <div class="avatar" id="userAvatar">M</div>
+            <div class="user-info">
+                <span class="user-name" id="userName">M. Iqbal Effendi</span>
+                <span class="user-email" id="userEmail">NIM: 054940372</span>
+            </div>
+            <button id="logoutButton" class="toggle-btn" aria-label="Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-door-exit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 12v.01" /><path d="M3 21h18" /><path d="M5 21v-16a2 2 0 0 1 2 -2h7.5m2.5 10.5v7.5" /><path d="M14 7h7m-3 -3l3 3l-3 3" /></svg>
+            </button>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Tracking Pengiriman</h1>
+            </div>
+            
+            <div class="controls-section">
+                <div class="search-container">
+                    <div class="flex items-center gap-sm">
+                        <div class="search-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Cari Nomor Delivery Order...">
+                        </div>
+                        <button id="searchButton" class="btn btn-primary" disabled>Cari</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultCard" class="result-card">
+                <div class="profile-section">
+                    <div>
+                        <div id="resNama" class="student-name">-</div>
+                        <div class="do-number">No. DO: <span id="resDO">-</span></div>
+                    </div>
+                    <div id="resStatus" class="badge">Status</div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Ekspedisi</span>
+                        <span id="resEkspedisi" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tanggal Kirim</span>
+                        <span id="resTanggal" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Jenis Paket</span>
+                        <span id="resPaket" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total Pembayaran</span>
+                        <span id="resTotal" class="info-value">-</span>
+                    </div>
+                </div>
+
+                <h3 class="timeline-title">Riwayat Perjalanan</h3>
+                <div id="resTimeline" class="timeline"></div>
+                
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

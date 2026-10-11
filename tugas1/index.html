@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA | Masuk</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body class="bg-surface flex items-center justify-center min-h-screen" id="indexPage">
+    <main class="w-full max-w-md flex flex-col items-center">
+        <div class="card w-full">
+            
+            <!-- Logo -->
+            <div class="flex justify-center mb-md">
+                <div class="logo-box flex items-center justify-center">
+                    <!-- UT SVG Logo -->
+                    <img src="assets/img/Logo_Universitas_Terbuka.svg" alt="Logo" class="logo-img">
+                </div>
+            </div>
+
+            <!-- Header Text -->
+            <div class="text-center mb-lg">
+                <h1 class="text-xl font-bold text-dark mb-xs">Selamat Datang</h1>
+                <p class="text-sm text-muted">Silakan masuk ke akun Anda</p>
+            </div>
+
+            <!-- Form -->
+            <form class="flex flex-col gap-md">
+                
+                <!-- Email Group -->
+                <div class="form-group">
+                    <label for="email" class="form-label text-dark font-medium">Surel</label>
+                    <input type="email" id="email" class="form-input" placeholder="email@example.com">
+                </div>
+
+                <!-- Password Group -->
+                <div class="form-group">
+                    <div class="flex justify-between items-center w-full mb-xs">
+                        <label for="password" class="form-label text-dark font-medium m-0">Kata Sandi</label>
+                        <a href="#" class="text-sm text-dark hover-underline" id="forgotPasswordTrigger">Lupa Kata Sandi?</a>
+                    </div>
+                    <div class="input-icon-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="Password">
+                        <!-- Show icon -->
+                        <button type="button" class="icon-btn text-muted" aria-label="Toggle password visibility" id="togglePasswordButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidden"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" /><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" /><path d="M3 3l18 18" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center gap-sm mt-xs">
+                    <input type="checkbox" id="remember" class="form-checkbox">
+                    <label for="remember" class="text-sm text-dark cursor-pointer">Ingat Saya</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" disabled class="btn btn-primary w-full mt-sm" id="loginButton">Masuk</button>
+            </form>
+
+            <!-- Sign Up Link -->
+            <p class="text-center text-sm text-muted mt-lg">
+                Belum punya akun? <a href="#" class="text-dark font-medium hover-underline" id="signUpTrigger">Mendaftar</a>
+            </p>
+        </div>
+
+        <!-- Footer Text -->
+        <p class="text-center text-xs text-muted mt-md">
+            Tugas 1 - Pemrograman Berbasis Web | STIK-4111
+        </p>
+    </main>
+
+    <div id="signUpModal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Pendaftaran Mandiri Belum Tersedia!</h3>
+                <button class="modal-close-btn" data-close-modal aria-label="Tutup modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6.707 5.293l5.293 5.292l5.293 -5.292a1 1 0 0 1 1.414 1.414l-5.292 5.293l5.292 5.293a1 1 0 0 1 -1.414 1.414l-5.293 -5.292l-5.293 5.292a1 1 0 1 1 -1.414 -1.414l5.292 -5.293l-5.292 -5.293a1 1 0 0 1 1.414 -1.414" /></svg>
+                </button>
+            </div>
+            
+            <div class="modal-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-message-exclamation mb-sm"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 9h8" /><path d="M8 13h6" /><path d="M15 18h-2l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5" /><path d="M19 16v3" /><path d="M19 22v.01" /></svg>
+                
+                <p>Pendaftaran akun secara mandiri saat ini belum dibuka. Akun pengguna diproses secara terpusat oleh Administrator.</p>
+                <br>
+                <button class="btn btn-primary w-full" data-close-modal>Saya Mengerti</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Layanan Pemulihan Kata Sandi</h3>
+                <button class="modal-close-btn" data-close-modal aria-label="Tutup modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6.707 5.293l5.293 5.292l5.293 -5.292a1 1 0 0 1 1.414 1.414l-5.292 5.293l5.292 5.293a1 1 0 0 1 -1.414 1.414l-5.293 -5.292l-5.293 5.292a1 1 0 1 1 -1.414 -1.414l5.292 -5.293l-5.292 -5.293a1 1 0 0 1 1.414 -1.414" /></svg>
+                </button>
+            </div>
+            
+            <div class="modal-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-message-exclamation mb-sm"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 9h8" /><path d="M8 13h6" /><path d="M15 18h-2l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5" /><path d="M19 16v3" /><path d="M19 22v.01" /></svg>
+                
+                <p>Fitur pemulihan kata sandi mandiri saat ini sedang dalam tahap pengembangan. Jika Anda mengalami kendala atau lupa kata sandi akun Universitas Terbuka, silakan hubungi tim Layanan Pelanggan (Hallo UT) untuk bantuan reset akun secara manual.</p>
+                <br>
+                <button class="btn btn-primary w-full" data-close-modal>Saya Mengerti</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
