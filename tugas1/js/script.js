@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
             searchButton.disabled = searchTrackingInput.value.trim() === '';
         });
 
-        searchButton.addEventListener('click', handleSearch);
+        searchButton.addEventListener('click', () => handleSearch());
 
         searchTrackingInput.addEventListener('keypress', function(e) {
             if (e.key !== 'Enter') {
