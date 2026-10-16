@@ -194,6 +194,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 historyTable.querySelector('tbody').insertAdjacentHTML('beforeend', rowHTML);
             });
         }
+
+        const totalMaterialsEl = document.getElementById('totalMaterials');
+        const newMaterialsEl = document.getElementById('newMaterials');
+        if (totalMaterialsEl) {
+            totalMaterialsEl.textContent = materials.length;
+        }
+        if (newMaterialsEl) {
+            const newMaterialsCount = materials.filter(item => {
+                const today = new Date();
+                const itemDate = new Date(item.tanggalMasuk);
+                return itemDate.toDateString() === today.toDateString();
+            }).length;
+            newMaterialsEl.textContent = newMaterialsCount;
+        }
     }
 
     /** tracking.html */
