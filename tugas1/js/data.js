@@ -38,7 +38,15 @@ var dataPengguna = [
     password: "admin123",
     role: "Administrator",
     lokasi: "Pusat"
-  }
+  },
+  {
+    id: 6,
+    nama: "M. Iqbal Effendi",
+    email: "054940372@ecampus.ut.ac.id",
+    password: "iqbal123",
+    role: "UPBJJ-UT",
+    lokasi: "UPBJJ Banjarmasin"
+  },
 ];
 
 var dataBahanAjar = [
