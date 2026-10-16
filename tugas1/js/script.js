@@ -182,13 +182,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (historyTable) {
             const historyData = Object.values(trackingList).slice(0, 5);
             historyData.forEach(item => {
+                const date = new Date(item.tanggalKirim);
+                item.tanggalKirim = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
                 const rowHTML = `
                     <tr>
                         <td>${item.tanggalKirim}</td>
-                        <td class="font-medium text-dark">${item.nomorDO}</td>
-                        <td>${item.ekspedisi}</td>
-                        <td>${item.nama}</td>
-                        <td><span class="badge ${item.status === 'Dikirim' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
+                        <td class="font-medium text-dark">${item.nomorDO || "-"}</td>
+                        <td>${item.ekspedisi || "-"}</td>
+                        <td>${item.nama || "-"}</td>
+                        <td><span class="badge ${item.status === 'Dikirim' ? 'badge-success' : 'badge-warning'}">${item.status || "Belum Dikirim"}</span></td>
                     </tr>
                 `;
                 historyTable.querySelector('tbody').insertAdjacentHTML('beforeend', rowHTML);
