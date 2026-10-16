@@ -82,12 +82,12 @@
                     <div class="summary-content">
                         <div class="stat-row">
                             <div class="stat-item">
-                                <span class="stat-value">5</span>
+                                <span class="stat-value" id="totalMaterials">5</span>
                                 <span class="stat-label">Total Judul BMP</span>
                             </div>
                             <div class="stat-divider"></div>
                             <div class="stat-item">
-                                <span class="stat-value" style="color: var(--primary);">2</span>
+                                <span class="stat-value" style="color: var(--primary);" id="newMaterials">2</span>
                                 <span class="stat-label">Bahan Ajar Baru</span>
                             </div>
                         </div>
@@ -148,28 +148,17 @@
                     <a class="toggle-btn" href="histori.html" style="color: var(--primary);">Lihat Semua</a>
                 </div>
                 <div class="table-responsive mt-sm">
-                    <table class="data-table">
+                    <table class="data-table" id="historySectionTable">
                         <thead>
                             <tr>
                                 <th>Tanggal</th>
                                 <th>No. DO / Transaksi</th>
                                 <th>Ekspedisi</th>
+                                <th>Penerima</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>25 Agu 2025</td>
-                                <td class="font-medium text-dark">2023001234</td>
-                                <td>JNE</td>
-                                <td><span class="badge badge-warning">Dalam Perjalanan</span></td>
-                            </tr>
-                            <tr>
-                                <td>12 Agu 2025</td>
-                                <td class="font-medium text-dark">2023005678</td>
-                                <td>Pos Indonesia</td>
-                                <td><span class="badge badge-success">Dikirim</span></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
