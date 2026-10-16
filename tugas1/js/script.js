@@ -177,6 +177,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
+
+        const historyTable = document.getElementById('historySectionTable');
+        if (historyTable) {
+            const historyData = Object.values(trackingList).slice(0, 5);
+            historyData.forEach(item => {
+                const rowHTML = `
+                    <tr>
+                        <td>${item.tanggalKirim}</td>
+                        <td class="font-medium text-dark">${item.nomorDO}</td>
+                        <td>${item.ekspedisi}</td>
+                        <td>${item.nama}</td>
+                        <td><span class="badge ${item.status === 'Dikirim' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
+                    </tr>
+                `;
+                historyTable.querySelector('tbody').insertAdjacentHTML('beforeend', rowHTML);
+            });
+        }
     }
 
     /** tracking.html */
