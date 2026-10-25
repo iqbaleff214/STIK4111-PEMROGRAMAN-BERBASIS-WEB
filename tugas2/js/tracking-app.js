@@ -1,5 +1,4 @@
 const app = Vue.createApp({
-    
     data() {
         const sittaSidebarCollapsed = localStorage.getItem('sittaSidebarCollapsed') ?? false;
 
@@ -94,9 +93,44 @@ const app = Vue.createApp({
                     ]
                 }
             },
+            
+            searchQuery: '',
+            searchResult: null,
+            hasSearched: false,
+            
+            isModalOpen: false,
+            form: {
+                nim: '',
+                nama: '',
+                ekspedisi: '',
+                paket: '',
+                tanggalKirim: ''
+            }
         }
     },
     
+    computed: {
+        generatedDONumber() {
+            const year = new Date().getFullYear();
+            const prefix = `DO${year}-`;
+            
+            const existingKeys = Object.keys(this.tracking).filter(k => k.startsWith(prefix));
+            let maxSeq = 0;
+            
+            existingKeys.forEach(key => {
+                const seq = parseInt(key.split('-')[1]);
+                if (seq > maxSeq) maxSeq = seq;
+            });
+            
+            const nextSeq = String(maxSeq + 1).padStart(4, '0');
+            return `${prefix}${nextSeq}`;
+        },
+        selectedPaketData() {
+            if (!this.form.paket) return null;
+            return this.paket.find(p => p.kode === this.form.paket);
+        }
+    },
+
     methods: {
         sidebarToggle() {
             this.sidebarCollapsed = !this.sidebarCollapsed;
@@ -106,14 +140,95 @@ const app = Vue.createApp({
         logout() {
             alert("Fungsi logout belum diimplementasikan.");
         },
-    },
-
-    watch: {
-        
+        searchDO() {
+            if (!this.searchQuery) return;
+            
+            this.hasSearched = true;
+            const result = this.tracking[this.searchQuery.trim().toUpperCase()];
+            
+            if (result) {
+                this.searchResult = { ...result, nomorDO: this.searchQuery.trim().toUpperCase() };
+            } else {
+                this.searchResult = null;
+            }
+        },
+        openModal() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            this.form = {
+                nim: '',
+                nama: '',
+                ekspedisi: '',
+                paket: '',
+                tanggalKirim: today
+            };
+            this.isModalOpen = true;
+        },
+        closeModal() {
+            this.isModalOpen = false;
+        },
+        submitForm() {
+            const newDoNumber = this.generatedDONumber;
+            const newEntry = {
+                nim: this.form.nim,
+                nama: this.form.nama,
+                status: "Diproses",
+                ekspedisi: this.form.ekspedisi,
+                tanggalKirim: this.form.tanggalKirim,
+                paket: this.form.paket,
+                total: this.selectedPaketData.harga,
+                perjalanan: [
+                    { 
+                        waktu: new Date().toLocaleString('id-ID'), 
+                        keterangan: "Data DO telah dibuat dan masuk antrean packing." 
+                    }
+                ]
+            };
+            
+            this.tracking[newDoNumber] = newEntry;
+            
+            this.closeModal();
+            alert(`Delivery Order ${newDoNumber} berhasil dibuat!`);
+            
+            this.searchQuery = newDoNumber;
+            this.searchDO();
+        },
+        viewDO(doNumber) {
+            this.searchQuery = doNumber;
+            this.searchDO();
+        },
+        resetSearch() {
+            this.searchQuery = '';
+            this.searchResult = null;
+            this.hasSearched = false;
+        },
+        checkEmptySearch() {
+            if (this.searchQuery.trim() === '') {
+                this.resetSearch();
+            }
+        },
+        formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+        },
+        getNamaPaket(kodePaket) {
+            const pk = this.paket.find(p => p.kode === kodePaket);
+            return pk ? pk.nama : kodePaket;
+        },
+        getJudulBuku(kodeMatkul) {
+            const book = this.stok.find(s => s.kode === kodeMatkul);
+            return book ? book.judul : "Judul Tidak Diketahui";
+        }
     },
 
     mounted() {
         document.body.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const doParam = urlParams.get('do');
+        if (doParam) {
+            this.searchQuery = doParam;
+            this.searchDO();
+        }
     }
 });
 

@@ -61,47 +61,173 @@
                         <div class="flex items-center gap-sm">
                             <div class="search-box">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                                <input type="text" id="searchInput" class="search-input" placeholder="Cari Nomor Delivery Order...">
+                                <input type="text" v-model="searchQuery" @keyup.enter="searchDO" class="search-input" placeholder="Cari Nomor Delivery Order...">
                             </div>
-                            <button id="searchButton" class="btn btn-primary" disabled>Cari</button>
+                            <button @click="searchDO" class="btn btn-primary" :disabled="!searchQuery">Cari</button>
                         </div>
                     </div>
+                    <button @click="openModal" class="btn btn-accent">+ Tambah DO Baru</button>
                 </div>
     
-                <div id="resultCard" class="result-card">
+                <div v-if="searchResult" class="result-card active">
                     <div class="profile-section">
                         <div>
-                            <div id="resNama" class="student-name">-</div>
-                            <div class="do-number">No. DO: <span id="resDO">-</span></div>
+                            <div class="student-name">{{ searchResult.nama }}</div>
+                            <div class="do-number">No. DO: <span>{{ searchResult.nomorDO }}</span> <span class="text-xs text-muted ml-2">({{ searchResult.nim }})</span></div>
                         </div>
-                        <div id="resStatus" class="badge">Status</div>
+                        <div class="badge" :class="searchResult.status === 'Selesai' ? 'badge-success' : 'badge-warning'">{{ searchResult.status }}</div>
                     </div>
     
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">Ekspedisi</span>
-                            <span id="resEkspedisi" class="info-value">-</span>
+                            <span class="info-value">{{ searchResult.ekspedisi }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Tanggal Kirim</span>
-                            <span id="resTanggal" class="info-value">-</span>
+                            <span class="info-value">{{ searchResult.tanggalKirim }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Jenis Paket</span>
-                            <span id="resPaket" class="info-value">-</span>
+                            <span class="info-value">{{ getNamaPaket(searchResult.paket) }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Total Pembayaran</span>
-                            <span id="resTotal" class="info-value">-</span>
+                            <span class="info-value">{{ formatRupiah(searchResult.total) }}</span>
                         </div>
                     </div>
     
                     <h3 class="timeline-title">Riwayat Perjalanan</h3>
-                    <div id="resTimeline" class="timeline"></div>
-                    
+                    <div class="timeline">
+                        <div v-for="(log, index) in searchResult.perjalanan" :key="index" class="timeline-item">
+                            <span class="time">{{ log.waktu }}</span>
+                            <p class="desc">{{ log.keterangan }}</p>
+                        </div>
+                    </div>
                 </div>
+
+                <div v-else-if="hasSearched && !searchResult" class="error-message active" style="display: block;">
+                    Nomor Delivery Order "{{ searchQuery }}" tidak ditemukan.
+                </div>
+
+                <div v-else class="card mt-md">
+                    <div class="card-header">
+                        <h2 class="card-title">Daftar Semua Transaksi DO</h2>
+                    </div>
+                    <div class="table-responsive mt-sm">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>No. DO / Transaksi</th>
+                                    <th>Ekspedisi</th>
+                                    <th>Penerima</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(entry, deliveryOrder) in tracking" :key="deliveryOrder">
+                                    <td>{{ entry.tanggalKirim }}</td>
+                                    <td class="font-medium text-dark">{{ deliveryOrder }}</td>
+                                    <td>{{ entry.ekspedisi }}</td>
+                                    <td>{{ entry.nama }}</td>
+                                    <td>
+                                        <span class="badge" :class="entry.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
+                                            {{ entry.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button @click="viewDO(deliveryOrder)" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                                            Lacak
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr v-if="Object.keys(tracking).length === 0">
+                                    <td colspan="6" class="text-center text-muted py-4">Belum ada data Delivery Order.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </main>
         </div>
+
+        <div class="modal-overlay" :class="{ active: isModalOpen }">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 class="modal-title">Tambah Delivery Order Baru</h2>
+                    <button @click="closeModal" class="modal-close-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                
+                <form @submit.prevent="submitForm">
+                    <div class="modal-body flex-col gap-sm" style="display: flex;">
+                        <div class="form-group">
+                            <label class="form-label font-medium text-sm">Nomor DO (Auto-Generate)</label>
+                            <input type="text" class="form-input" :value="generatedDONumber" disabled style="background-color: var(--surface);">
+                        </div>
+                        
+                        <div class="flex gap-sm">
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label font-medium text-sm">NIM</label>
+                                <input type="text" v-model="form.nim" class="form-input" placeholder="Masukkan NIM..." required>
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label class="form-label font-medium text-sm">Nama Lengkap</label>
+                                <input type="text" v-model="form.nama" class="form-input" placeholder="Nama mahasiswa..." required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label font-medium text-sm">Ekspedisi</label>
+                            <select v-model="form.ekspedisi" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih Ekspedisi --</option>
+                                <option v-for="eks in pengirimanList" :key="eks.kode" :value="eks.nama">{{ eks.nama }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label font-medium text-sm">Paket Bahan Ajar</label>
+                            <select v-model="form.paket" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih Paket --</option>
+                                <option v-for="pkt in paket" :key="pkt.kode" :value="pkt.kode">
+                                    {{ pkt.kode }} - {{ pkt.nama }}
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div v-if="selectedPaketData" class="p-3 mt-xs rounded" style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem;">
+                            <span class="text-xs text-muted font-bold block mb-1">DETAIL ISI PAKET:</span>
+                            <ul class="text-sm m-0 pl-4">
+                                <li v-for="kodeMatkul in selectedPaketData.isi" :key="kodeMatkul">
+                                    <strong>{{ kodeMatkul }}</strong> - {{ getJudulBuku(kodeMatkul) }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="flex gap-sm mt-xs">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Tanggal Kirim</label>
+                                <input type="date" v-model="form.tanggalKirim" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Total Harga</label>
+                                <input type="text" class="form-input font-bold" :value="selectedPaketData ? formatRupiah(selectedPaketData.harga) : 'Rp 0'" disabled style="background-color: var(--surface); color: var(--primary);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" @click="closeModal" class="btn btn-outline">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data DO</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script src="js/tracking-app.js"></script>
