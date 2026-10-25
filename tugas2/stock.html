@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA | Stok Bahan Ajar</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body id="trackingPage">
+    <div id="app">
+        <aside class="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="brand-box">
+                    <div class="logo-icon flex items-center justify-center">
+                        <img src="assets/img/Logo_Universitas_Terbuka.svg" alt="Logo" class="logo-img">
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">SITTA</span>
+                        <span class="brand-subtitle">Informasi Bahan Ajar</span>
+                    </div>
+                </div>
+                <!-- Sidebar Toggle Button -->
+                <button @click="sidebarToggle" class="toggle-btn" aria-label="Toggle Navigation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M11 7l-5 5l5 5" /><path d="M17 7l-5 5l5 5" /></svg>
+                </button>
+            </div>
+    
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav">
+                <a :href="item.link" class="nav-item" :data-file="item.link" v-for="item in navItems" :class="{ active: item.active() }">
+                    <div class="nav-icon" v-html="item.icon"></div>
+                    <span class="nav-label">{{ item.name }}</span>
+                </a>
+            </nav>
+    
+            <!-- Sidebar Footer Profile -->
+            <div class="sidebar-footer">
+                <div class="avatar" id="userAvatar">M</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">M. Iqbal Effendi</span>
+                    <span class="user-email" id="userEmail">054940372</span>
+                </div>
+                <button @click="logout" class="toggle-btn" aria-label="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-door-exit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 12v.01" /><path d="M3 21h18" /><path d="M5 21v-16a2 2 0 0 1 2 -2h7.5m2.5 10.5v7.5" /><path d="M14 7h7m-3 -3l3 3l-3 3" /></svg>
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">Stok Bahan Ajar</h1>
+                </div>
+                
+                <div class="controls-section">
+                    <div class="search-container">
+                        <div class="search-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Cari nama barang atau kode barang...">
+                        </div>
+                        <div class="result-count">Menampilkan <span id="countDisplay">0</span> bahan ajar</div>
+                    </div>
+                    <button class="btn btn-primary" id="newStockButton">Stok Baru</button>
+                </div>
+
+                <div class="catalog-grid" id="catalogGrid"></div>
+            </main>
+        </div>
+
+        <div id="newStockModal" class="modal-overlay" role="dialog" aria-modal="true">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3 class="modal-title">Stok Baru</h3>
+                    <button class="modal-close-btn" data-close-modal aria-label="Tutup modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6.707 5.293l5.293 5.292l5.293 -5.292a1 1 0 0 1 1.414 1.414l-5.292 5.293l5.292 5.293a1 1 0 0 1 -1.414 1.414l-5.293 -5.292l-5.293 5.292a1 1 0 1 1 -1.414 -1.414l5.292 -5.293l-5.292 -5.293a1 1 0 0 1 1.414 -1.414" /></svg>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <form class="flex flex-col gap-md">
+                        <!-- Item Code Group -->
+                        <div class="form-group">
+                            <label for="itemCode" class="form-label text-dark font-medium">Kode Barang</label>
+                            <input type="text" id="itemCode" class="form-input" placeholder="Masukkan kode barang">
+                        </div>
+
+                        <!-- Item Name Group -->
+                        <div class="form-group">
+                            <label for="itemName" class="form-label text-dark font-medium">Nama Barang</label>
+                            <input type="text" id="itemName" class="form-input" placeholder="Masukkan nama barang">
+                        </div>
+
+                        <!-- Quantity Group -->
+                        <div class="form-group">
+                            <label for="quantity" class="form-label text-dark font-medium">Jumlah</label>
+                            <input type="number" id="quantity" class="form-input" placeholder="Masukkan jumlah stok">
+                        </div>
+
+                        <!-- Location Group -->
+                        <div class="form-group">
+                            <label for="location" class="form-label text-dark font-medium">Lokasi</label>
+                            <input type="text" id="location" class="form-input" placeholder="Masukkan lokasi penyimpanan">
+                        </div>
+
+                        <!-- Type Group -->
+                        <div class="form-group">
+                            <label for="type" class="form-label text-dark font-medium">Jenis Barang</label>
+                            <select id="type" class="form-select">
+                                <option value="" disabled selected>Pilih Jenis Barang</option>
+                                <option value="BMP">BMP</option>
+                                <option value="Umum">Umum</option>
+                            </select>
+                        </div>
+
+                        <!-- Edition Group -->
+                        <div class="form-group">
+                            <label for="edition" class="form-label text-dark font-medium">Edisi</label>
+                            <input type="text" id="edition" class="form-input" placeholder="Masukkan edisi">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-full mt-sm" id="addStockButton">Tambahkan Stok</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="adjustStockModal" class="modal-overlay" role="dialog" aria-modal="true">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3 class="modal-title">Perbarui Stok <span id="adjustStockItemCode"></span> </h3>
+                    <button class="modal-close-btn" data-close-modal aria-label="Tutup modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6.707 5.293l5.293 5.292l5.293 -5.292a1 1 0 0 1 1.414 1.414l-5.292 5.293l5.292 5.293a1 1 0 0 1 -1.414 1.414l-5.293 -5.292l-5.293 5.292a1 1 0 1 1 -1.414 -1.414l5.292 -5.293l-5.292 -5.293a1 1 0 0 1 1.414 -1.414" /></svg>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <form class="flex flex-col gap-md">
+                        <!-- Quantity Group -->
+                        <div class="form-group">
+                            <label for="quantity" class="form-label text-dark font-medium">Jumlah</label>
+                            <input type="number" id="adjustQuantity" class="form-input" placeholder="Masukkan jumlah stok">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-full mt-sm" id="adjustStockButton">Perbarui Stok</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/stock-app.js"></script>
+</body>
+</html>
