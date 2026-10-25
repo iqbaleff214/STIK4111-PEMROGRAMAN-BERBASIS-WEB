@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA | Tracking Pengiriman</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body id="trackingPage">
+    <div id="app">
+        <aside class="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="brand-box">
+                    <div class="logo-icon flex items-center justify-center">
+                        <img src="assets/img/Logo_Universitas_Terbuka.svg" alt="Logo" class="logo-img">
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">SITTA</span>
+                        <span class="brand-subtitle">Informasi Bahan Ajar</span>
+                    </div>
+                </div>
+                <!-- Sidebar Toggle Button -->
+                <button @click="sidebarToggle" class="toggle-btn" aria-label="Toggle Navigation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M11 7l-5 5l5 5" /><path d="M17 7l-5 5l5 5" /></svg>
+                </button>
+            </div>
+    
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav">
+                <a :href="item.link" class="nav-item" :data-file="item.link" v-for="item in navItems" :class="{ active: item.active() }">
+                    <div class="nav-icon" v-html="item.icon"></div>
+                    <span class="nav-label">{{ item.name }}</span>
+                </a>
+            </nav>
+    
+            <!-- Sidebar Footer Profile -->
+            <div class="sidebar-footer">
+                <div class="avatar" id="userAvatar">M</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">M. Iqbal Effendi</span>
+                    <span class="user-email" id="userEmail">054940372</span>
+                </div>
+                <button @click="logout" class="toggle-btn" aria-label="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-door-exit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13 12v.01" /><path d="M3 21h18" /><path d="M5 21v-16a2 2 0 0 1 2 -2h7.5m2.5 10.5v7.5" /><path d="M14 7h7m-3 -3l3 3l-3 3" /></svg>
+                </button>
+            </div>
+        </aside>
+    
+        <div class="main-wrapper">
+            <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">Tracking Pengiriman</h1>
+                </div>
+                
+                <div class="controls-section">
+                    <div class="search-container">
+                        <div class="flex items-center gap-sm">
+                            <div class="search-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                                <input type="text" id="searchInput" class="search-input" placeholder="Cari Nomor Delivery Order...">
+                            </div>
+                            <button id="searchButton" class="btn btn-primary" disabled>Cari</button>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="resultCard" class="result-card">
+                    <div class="profile-section">
+                        <div>
+                            <div id="resNama" class="student-name">-</div>
+                            <div class="do-number">No. DO: <span id="resDO">-</span></div>
+                        </div>
+                        <div id="resStatus" class="badge">Status</div>
+                    </div>
+    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Ekspedisi</span>
+                            <span id="resEkspedisi" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tanggal Kirim</span>
+                            <span id="resTanggal" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Jenis Paket</span>
+                            <span id="resPaket" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Pembayaran</span>
+                            <span id="resTotal" class="info-value">-</span>
+                        </div>
+                    </div>
+    
+                    <h3 class="timeline-title">Riwayat Perjalanan</h3>
+                    <div id="resTimeline" class="timeline"></div>
+                    
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/tracking-app.js"></script>
+</body>
+</html>
