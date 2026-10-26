@@ -91,7 +91,7 @@
                         <div class="flex items-center gap-sm">
                             <label class="flex items-center cursor-pointer gap-xs">
                                 <input type="checkbox" v-model="filters.warningOnly" class="form-checkbox">
-                                <span class="text-sm font-medium text-danger" style="color: #ef4444; margin-left: 0.5rem;">Hanya tampilkan stok butuh Reorder (Menipis/Kosong)</span>
+                                <span class="text-sm font-medium text-danger" style="color: #ef4444; margin-left: 0.5rem;">Hanya tampilkan stok butuh <em>reorder</em> (Menipis/Kosong)</span>
                             </label>
                         </div>
                         
@@ -110,8 +110,8 @@
                             <thead>
                                 <tr>
                                     <th>Kode & Judul</th>
-                                    <th>Kategori & UPBJJ</th>
-                                    <th>Lokasi Rak</th>
+                                    <th>Kategori</th>
+                                    <th>Lokasi</th>
                                     <th>Harga</th>
                                     <th class="text-center">Qty / Safety</th>
                                     <th>Status</th>
@@ -122,13 +122,19 @@
                                 <tr v-for="item in filteredStock" :key="item.kode">
                                     <td>
                                         <div class="font-bold text-dark">{{ item.kode }}</div>
-                                        <div class="text-sm text-muted">{{ item.judul }}</div>
+                                        <div class="text-sm">{{ item.judul }}</div>
+                                        <div v-if="item.catatanHTML" style="margin-top: 1rem;">
+                                            <div class="text-xs text-muted">catatan:</div>
+                                            <div v-html="item.catatanHTML" class="text-sm text-muted"></div>
+                                        </div>
                                     </td>
                                     <td>
                                         <span class="badge" style="background-color: var(--primary-light); color: var(--primary); margin-bottom: 4px; display: inline-block;">{{ item.kategori }}</span>
-                                        <div class="text-xs text-muted">{{ item.upbjj }}</div>
                                     </td>
-                                    <td class="font-medium">{{ item.lokasiRak }}</td>
+                                    <td>
+                                        <div class="font-medium">UPBJJ {{ item.upbjj }}</div>
+                                        <div class="text-sm text-muted">Rak: {{ item.lokasiRak }}</div>
+                                    </td>
                                     <td>{{ formatRupiah(item.harga) }}</td>
                                     <td class="text-center">
                                         <span class="font-bold text-base">{{ item.qty }}</span>
@@ -219,7 +225,7 @@
 
                         <div class="form-group">
                             <label class="form-label font-medium text-sm">Catatan (Bisa format HTML)</label>
-                            <input type="text" v-model="formAdd.catatanHTML" class="form-input" placeholder="Mis: <em>Edisi 2024</em>">
+                            <textarea type="text" v-model="formAdd.catatanHTML" class="form-input" placeholder="Mis: <em>Edisi 2024</em>"></textarea>
                         </div>
                     </div>
 
