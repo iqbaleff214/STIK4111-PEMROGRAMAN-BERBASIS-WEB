@@ -61,12 +61,12 @@
                         <div class="flex items-center gap-sm">
                             <div class="search-box">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                                <input type="text" v-model="searchQuery" @keyup.enter="searchDO" class="search-input" placeholder="Cari Nomor Delivery Order...">
+                                <input type="search" v-model="searchQuery" @search="searchDO" class="search-input" placeholder="Cari Nomor Delivery Order...">
                             </div>
-                            <button @click="searchDO" class="btn btn-primary" :disabled="!searchQuery">Cari</button>
+                            <button @click="searchDO" class="btn btn-accent" :disabled="!searchQuery">Cari</button>
                         </div>
                     </div>
-                    <button @click="openModal" class="btn btn-accent">+ Tambah DO Baru</button>
+                    <button @click="openModal" class="btn btn-primary">+ DO Baru</button>
                 </div>
     
                 <div v-if="searchResult" class="result-card active">
@@ -110,46 +110,49 @@
                     Nomor Delivery Order "{{ searchQuery }}" tidak ditemukan.
                 </div>
 
-                <div v-else class="card mt-md">
-                    <div class="card-header">
-                        <h2 class="card-title">Daftar Semua Transaksi DO</h2>
+                <template v-else>
+                    <div class="mb-sm text-sm text-muted font-medium">Menampilkan <span class="text-dark">{{ Object.keys(tracking).length }}</span> transaksi</div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Daftar Semua Transaksi DO</h2>
+                        </div>
+                        <div class="table-responsive mt-sm">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>No. DO / Transaksi</th>
+                                        <th>Ekspedisi</th>
+                                        <th>Penerima</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(entry, deliveryOrder) in tracking" :key="deliveryOrder">
+                                        <td>{{ entry.tanggalKirim }}</td>
+                                        <td class="font-medium text-dark">{{ deliveryOrder }}</td>
+                                        <td>{{ entry.ekspedisi }}</td>
+                                        <td>{{ entry.nama }}</td>
+                                        <td>
+                                            <span class="badge" :class="entry.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
+                                                {{ entry.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button @click="viewDO(deliveryOrder)" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                                                Lacak
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="Object.keys(tracking).length === 0">
+                                        <td colspan="6" class="text-center text-muted py-4">Belum ada data Delivery Order.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="table-responsive mt-sm">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <th>No. DO / Transaksi</th>
-                                    <th>Ekspedisi</th>
-                                    <th>Penerima</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(entry, deliveryOrder) in tracking" :key="deliveryOrder">
-                                    <td>{{ entry.tanggalKirim }}</td>
-                                    <td class="font-medium text-dark">{{ deliveryOrder }}</td>
-                                    <td>{{ entry.ekspedisi }}</td>
-                                    <td>{{ entry.nama }}</td>
-                                    <td>
-                                        <span class="badge" :class="entry.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
-                                            {{ entry.status }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button @click="viewDO(deliveryOrder)" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
-                                            Lacak
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr v-if="Object.keys(tracking).length === 0">
-                                    <td colspan="6" class="text-center text-muted py-4">Belum ada data Delivery Order.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                </template>
 
             </main>
         </div>
