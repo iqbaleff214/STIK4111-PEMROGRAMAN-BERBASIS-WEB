@@ -141,7 +141,11 @@ const app = Vue.createApp({
             alert("Fungsi logout belum diimplementasikan.");
         },
         searchDO() {
-            if (!this.searchQuery) return;
+            if (!this.searchQuery || this.searchQuery === '') {
+                this.hasSearched = false;
+                this.searchResult = null;
+                return;
+            }
             
             this.hasSearched = true;
             const result = this.tracking[this.searchQuery.trim().toUpperCase()];
