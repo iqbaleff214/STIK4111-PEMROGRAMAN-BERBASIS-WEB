@@ -35,8 +35,8 @@ STIK4111-Pemrograman-Web/
 | Modul | Status | Dokumentasi | Demo |
 | --- | --- | --- | --- |
 | **Tugas 1** | 🟢 Selesai | [Lihat Detail](tugas1/README.md) | [Demo](https://iqbaleff214.github.io/STIK4111-PEMROGRAMAN-BERBASIS-WEB/tugas1/index.html) |
-| **Tugas 2** | 🔴 Proses | - | [Demo](https://iqbaleff214.github.io/STIK4111-PEMROGRAMAN-BERBASIS-WEB/tugas2/index.html) |
-| **Tugas 3** | 🔴 Tertunda | - | - |
+| **Tugas 2** | 🟢 Selesai | [Lihat Detail](tugas2/README.md) | [Demo](https://iqbaleff214.github.io/STIK4111-PEMROGRAMAN-BERBASIS-WEB/tugas2/index.html) |
+| **Tugas 3** | 🟡 Proses | - | [Demo](https://iqbaleff214.github.io/STIK4111-PEMROGRAMAN-BERBASIS-WEB/tugas3/index.html) |
 
 ## 💻 Memulai di Lingkungan Lokal (*Quick Start*)
 
