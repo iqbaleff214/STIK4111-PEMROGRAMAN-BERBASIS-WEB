@@ -1,0 +1,141 @@
+<template id="tpl-tracking">
+    <div>
+        <div class="page-header">
+            <h1 class="page-title">Tracking Pengiriman</h1>
+        </div>
+
+        <div class="controls-section">
+            <div class="search-container">
+                <div class="flex items-center gap-sm w-full">
+                    <div class="search-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        <input
+                            type="text"
+                            v-model="searchQuery"
+                            @keyup.enter="searchDO"
+                            @keyup.esc="resetSearch"
+                            class="search-input"
+                            placeholder="Cari Nomor DO atau NIM (Enter untuk cari, Esc untuk reset)...">
+                    </div>
+                    <button type="button" @click="searchDO" class="btn btn-accent" :disabled="!searchQuery.trim()">Cari</button>
+                    <button type="button" v-if="hasSearched || searchQuery" @click="resetSearch" class="btn btn-outline">Reset</button>
+                </div>
+            </div>
+            <button type="button" @click="$emit('open-order')" class="btn btn-primary">+ DO Baru</button>
+        </div>
+
+        <div v-if="searchResult" class="result-card active">
+            <div class="profile-section">
+                <div>
+                    <div class="student-name">{{ searchResult.nama }}</div>
+                    <div class="do-number">
+                        No. DO: <span>{{ searchResult.nomorDO }}</span>
+                        <span class="text-xs text-muted">({{ searchResult.nim }})</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-sm">
+                    <div class="badge" :class="searchResult.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
+                        {{ searchResult.status }}
+                    </div>
+                    <button type="button" @click="resetSearch" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                        ← Semua DO
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Ekspedisi</span>
+                    <span class="info-value">{{ searchResult.ekspedisi }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tanggal Kirim</span>
+                    <span class="info-value">{{ $filters.tanggalIndo(searchResult.tanggalKirim) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Jenis Paket</span>
+                    <span class="info-value">{{ getNamaPaket(searchResult.paket) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Pembayaran</span>
+                    <span class="info-value">{{ $filters.rupiah(searchResult.total) }}</span>
+                </div>
+            </div>
+
+            <h3 class="timeline-title">Riwayat Perjalanan</h3>
+            <div class="timeline mb-lg">
+                <div v-for="(log, index) in searchResult.perjalanan" :key="index" class="timeline-item">
+                    <span class="time">{{ log.waktu }}</span>
+                    <p class="desc">{{ log.keterangan }}</p>
+                </div>
+            </div>
+
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 1.25rem;">
+                <label class="form-label font-bold text-sm">Tambah Status Progress Pengiriman</label>
+                <div class="flex gap-sm">
+                    <input
+                        type="text"
+                        v-model.trim="newProgressText"
+                        @keyup.enter="submitProgress"
+                        class="form-input"
+                        placeholder="Masukkan keterangan status perjalanan terbaru...">
+                    <button type="button" @click="submitProgress" class="btn btn-primary" :disabled="!newProgressText">
+                        Tambah Log
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div v-else-if="hasSearched && !searchResult" class="error-message">
+            Nomor Delivery Order atau NIM "{{ lastSearchedQuery }}" tidak ditemukan.
+        </div>
+
+        <template v-else>
+            <div class="mb-sm text-sm text-muted font-medium">
+                Menampilkan <span class="text-dark font-bold">{{ Object.keys(data).length }}</span> transaksi
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Daftar Semua Transaksi DO</h2>
+                </div>
+                <div class="table-responsive mt-sm">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No. DO / Transaksi</th>
+                                <th>NIM</th>
+                                <th>Ekspedisi</th>
+                                <th>Penerima</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(entry, deliveryOrder) in data" :key="deliveryOrder">
+                                <td>{{ $filters.tanggalIndo(entry.tanggalKirim) }}</td>
+                                <td class="font-bold text-dark">{{ deliveryOrder }}</td>
+                                <td>{{ entry.nim }}</td>
+                                <td>{{ entry.ekspedisi }}</td>
+                                <td>{{ entry.nama }}</td>
+                                <td>
+                                    <span class="badge" :class="entry.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
+                                        {{ entry.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" @click="viewDO(deliveryOrder)" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                                        Lacak
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr v-if="Object.keys(data).length === 0">
+                                <td colspan="7" class="text-center text-muted" style="padding: 2rem;">Belum ada data Delivery Order.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

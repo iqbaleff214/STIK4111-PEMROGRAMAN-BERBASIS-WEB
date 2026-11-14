@@ -1,0 +1,110 @@
+<template id="tpl-dashboard">
+    <div>
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtext">{{ greetingText }}</p>
+        </div>
+
+        <div class="card-grid">
+            <!-- Materials Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Informasi Bahan Ajar</h2>
+                    <button type="button" class="toggle-btn" @click="$emit('navigate', 'stok')" style="color: var(--primary); font-weight: 600;">Lihat Katalog</button>
+                </div>
+                <div class="summary-content">
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ stok.length }}</span>
+                            <span class="stat-label">Total Judul BMP</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-value" style="color: var(--primary);">{{ totalStok }}</span>
+                            <span class="stat-label">Total Stok</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Tracking Pengiriman</h2>
+                    <button type="button" class="toggle-btn" @click="$emit('navigate', 'tracking')" style="color: var(--primary); font-weight: 600;">Riwayat</button>
+                </div>
+                <div class="quick-track-content">
+                    <p class="text-sm text-muted mb-sm">Lacak status pengiriman Anda dengan cepat.</p>
+                    <form @submit.prevent="submitQuickSearch" class="flex gap-sm mb-md">
+                        <input type="text" v-model.trim="quickDoQuery" class="form-input" placeholder="Masukkan Nomor DO atau NIM..." required>
+                        <button type="submit" class="btn btn-primary">Lacak</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Section -->
+        <div class="card mb-xl">
+            <div class="card-header">
+                <h2 class="card-title">Laporan</h2>
+            </div>
+            <div class="report-grid mt-sm">
+                <div @click="$emit('navigate', 'tracking')" class="report-tile">
+                    <div class="report-icon bg-blue-light">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="report-info">
+                        <h3 class="font-bold text-dark">Monitoring Progress DO</h3>
+                        <p class="text-sm text-muted mt-xs">Pantau status pergerakan dan kendala pengiriman bahan ajar dari hulu ke hilir.</p>
+                    </div>
+                    <div class="report-arrow">→</div>
+                </div>
+
+                <div @click="$emit('navigate', 'stok')" class="report-tile">
+                    <div class="report-icon bg-yellow-light">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b38f00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    </div>
+                    <div class="report-info">
+                        <h3 class="font-bold text-dark">Rekap Bahan Ajar</h3>
+                        <p class="text-sm text-muted mt-xs">Lihat laporan ketersediaan, stok safety, serta mutasi bahan ajar.</p>
+                    </div>
+                    <div class="report-arrow">→</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Histori Transaksi Terakhir</h2>
+                <button type="button" class="toggle-btn" @click="$emit('navigate', 'tracking')" style="color: var(--primary); font-weight: 600;">Lihat Semua</button>
+            </div>
+            <div class="table-responsive mt-sm">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>No. DO / Transaksi</th>
+                            <th>Ekspedisi</th>
+                            <th>Penerima</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(entry, deliveryOrder) in tracking" :key="deliveryOrder">
+                            <td>{{ $filters.tanggalIndo(entry.tanggalKirim) }}</td>
+                            <td class="font-medium text-dark">{{ deliveryOrder }}</td>
+                            <td>{{ entry.ekspedisi }}</td>
+                            <td>{{ entry.nama }} ({{ entry.nim }})</td>
+                            <td>
+                                <span class="badge" :class="entry.status === 'Selesai' ? 'badge-success' : 'badge-warning'">
+                                    {{ entry.status }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>

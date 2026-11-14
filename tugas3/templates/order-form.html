@@ -1,0 +1,92 @@
+<template id="tpl-order">
+    <div class="modal-overlay" :class="{ active: isOpen }" @click.self="$emit('close')">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Tambah Delivery Order (DO) Baru</h3>
+                <button type="button" @click="$emit('close')" class="modal-close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <form @submit.prevent="submitForm">
+                <div class="modal-body flex-col gap-sm" style="display: flex;">
+                    <div class="flex gap-sm">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label font-medium text-sm">Nomor DO (Otomatis)</label>
+                            <input type="text" class="form-input font-bold text-primary" :value="generatedDONumber" disabled style="background-color: var(--surface);">
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label font-medium text-sm">Tanggal Kirim *</label>
+                            <input type="date" v-model="form.tanggalKirim" class="form-input" :class="{ 'is-invalid': errors.tanggalKirim }">
+                            <span v-if="form.tanggalKirim" class="text-xs text-muted mt-xs">
+                                Format: <strong>{{ $filters.tanggalIndo(form.tanggalKirim) }}</strong>
+                            </span>
+                            <span v-if="errors.tanggalKirim" class="field-error">{{ errors.tanggalKirim }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-sm">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label font-medium text-sm">NIM *</label>
+                            <input type="text" v-model.trim="form.nim" class="form-input" :class="{ 'is-invalid': errors.nim }" placeholder="Masukkan NIM mahasiswa...">
+                            <span v-if="errors.nim" class="field-error">{{ errors.nim }}</span>
+                        </div>
+
+                        <div class="form-group" style="flex: 2;">
+                            <label class="form-label font-medium text-sm">Nama Lengkap *</label>
+                            <input type="text" v-model.trim="form.nama" class="form-input" :class="{ 'is-invalid': errors.nama }" placeholder="Nama lengkap mahasiswa...">
+                            <span v-if="errors.nama" class="field-error">{{ errors.nama }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-sm">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label font-medium text-sm">Ekspedisi *</label>
+                            <select v-model="form.ekspedisi" class="form-select" :class="{ 'is-invalid': errors.ekspedisi }">
+                                <option value="" disabled>-- Pilih Ekspedisi --</option>
+                                <option v-for="eks in ekspedisi" :key="eks.kode" :value="eks.nama">{{ eks.nama }}</option>
+                            </select>
+                            <span v-if="errors.ekspedisi" class="field-error">{{ errors.ekspedisi }}</span>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label font-medium text-sm">Paket Bahan Ajar *</label>
+                            <select v-model="form.paket" class="form-select" :class="{ 'is-invalid': errors.paket }">
+                                <option value="" disabled>-- Pilih Paket --</option>
+                                <option v-for="pkt in paket" :key="pkt.kode" :value="pkt.kode">
+                                    {{ pkt.kode }} - {{ pkt.nama }}
+                                </option>
+                            </select>
+                            <span v-if="errors.paket" class="field-error">{{ errors.paket }}</span>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedPaketData" style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem 1rem;">
+                        <span class="text-xs text-muted font-bold" style="display: block; margin-bottom: 0.25rem;">DETAIL ISI PAKET:</span>
+                        <ul class="text-sm m-0" style="padding-left: 1.25rem;">
+                            <li v-for="kodeMatkul in selectedPaketData.isi" :key="kodeMatkul">
+                                <strong>{{ kodeMatkul }}</strong> — {{ getJudulBuku(kodeMatkul) }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label font-medium text-sm">Total Harga</label>
+                        <input
+                            type="text"
+                            class="form-input font-bold"
+                            :value="selectedPaketData ? $filters.rupiah(selectedPaketData.harga) : 'Rp 0'"
+                            disabled
+                            style="background-color: var(--surface); color: var(--primary);">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" @click="$emit('close')" class="btn btn-outline">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Data DO</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>

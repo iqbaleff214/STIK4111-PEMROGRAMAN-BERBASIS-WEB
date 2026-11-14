@@ -7,7 +7,6 @@ const app = Vue.createApp({
             isLoading: true,
             sidebarCollapsed: sittaSidebarCollapsed,
             isOrderModalOpen: false,
-            quickDoQuery: '',
             navItems: [
                 {
                     id: 'dasbor',
@@ -35,17 +34,6 @@ const app = Vue.createApp({
             }
         };
     },
-    computed: {
-        greetingText() {
-            const currentHour = new Date().getHours();
-            if (currentHour < 12) return 'Selamat Pagi!';
-            if (currentHour < 18) return 'Selamat Siang!';
-            return 'Selamat Malam!';
-        },
-        totalStok() {
-            return this.state.stok.reduce((total, item) => total + item.qty, 0);
-        }
-    },
     async created() {
         const data = await DataService.fetchBahanAjar();
         this.state = data;
@@ -67,13 +55,14 @@ const app = Vue.createApp({
                 type: 'primary'
             });
         },
-        searchDeliveryOrder() {
-            if (!this.quickDoQuery) return;
+        searchDeliveryOrder(query) {
+            if (!query) return;
             this.tab = 'tracking';
-            if (this.$refs.trackingComponent) {
-                this.$refs.trackingComponent.viewDO(this.quickDoQuery);
-            }
-            this.quickDoQuery = '';
+            this.$nextTick(() => {
+                if (this.$refs.trackingComponent) {
+                    this.$refs.trackingComponent.viewDO(query);
+                }
+            });
         },
         handleCreateStock(newItem) {
             this.state.stok.push(newItem);
@@ -131,6 +120,16 @@ const app = Vue.createApp({
         }
     }
 });
+
+app.config.errorHandler = (err, instance, info) => {
+    console.error('[Vue Error]', {
+        message: err.message,
+        info,
+        component: instance?.$options?.name,
+        data: instance?.$data,
+        error: err
+    });
+};
 
 app.config.globalProperties.$filters = {
     rupiah(angka) {

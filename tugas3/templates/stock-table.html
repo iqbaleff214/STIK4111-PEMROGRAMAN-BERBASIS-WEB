@@ -1,0 +1,261 @@
+<template id="tpl-stock">
+    <div>
+        <div class="page-header">
+            <h1 class="page-title">Stok Bahan Ajar</h1>
+        </div>
+
+        <div class="card mb-md" style="padding: 1.5rem;">
+            <!-- Filter Controls -->
+            <div class="flex flex-wrap gap-md items-center mb-md">
+                <div class="search-box" style="flex: 1; min-width: 250px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search search-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    <input type="search" v-model="filters.search" class="search-input" placeholder="Cari kode atau judul...">
+                </div>
+
+                <div class="form-group m-0" style="width: auto;">
+                    <select v-model="filters.upbjj" class="form-select" style="min-width: 170px;">
+                        <option value="">Semua Daerah (UPBJJ)</option>
+                        <option v-for="daerah in upbjjList" :key="daerah" :value="daerah">{{ daerah }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group m-0" style="width: auto;" v-if="filters.upbjj">
+                    <select v-model="filters.kategori" class="form-select" style="min-width: 165px;">
+                        <option value="">Semua Kategori</option>
+                        <option v-for="kat in kategoriList" :key="kat" :value="kat">{{ kat }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group m-0" style="width: auto;">
+                    <select v-model="filters.sortBy" class="form-select" style="min-width: 185px;">
+                        <option value="judul">Urutkan: Judul (A-Z)</option>
+                        <option value="qty">Urutkan: Stok Terkecil</option>
+                        <option value="harga">Urutkan: Harga Termurah</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-sm">
+                <div class="flex items-center gap-sm">
+                    <label class="flex items-center cursor-pointer gap-xs">
+                        <input type="checkbox" v-model="filters.warningOnly" class="form-checkbox">
+                        <span class="text-sm font-medium text-danger" style="margin-left: 0.5rem;">
+                            Hanya tampilkan stok butuh <em>reorder</em> (Menipis/Kosong)
+                        </span>
+                    </label>
+                </div>
+
+                <div class="flex items-center gap-sm">
+                    <button type="button" @click="resetFilters" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Reset Filter</button>
+                    <button type="button" @click="openAddModal" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">+ Stok Baru</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-sm text-sm text-muted font-medium">
+            Menampilkan <span class="text-dark font-bold">{{ filteredStock.length }}</span> bahan ajar
+            <span class="text-xs">(Arahkan kursor ke kolom <strong>Status</strong> untuk melihat catatan bahan ajar)</span>
+        </div>
+
+        <div class="card p-0" style="overflow: visible;">
+            <div class="table-responsive" style="overflow: visible;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kode &amp; Judul</th>
+                            <th>Kategori</th>
+                            <th>UT-Daerah &amp; Rak</th>
+                            <th>Harga</th>
+                            <th class="text-center">Jumlah Stok</th>
+                            <th class="text-center">Stok Safety</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in filteredStock" :key="item.kode">
+                            <td>
+                                <div class="font-bold text-dark">{{ item.kode }}</div>
+                                <div class="text-sm">{{ item.judul }}</div>
+                            </td>
+                            <td>
+                                <span class="badge" style="background-color: var(--primary-light); color: var(--primary);">
+                                    {{ item.kategori }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="font-medium">UPBJJ {{ item.upbjj }}</div>
+                                <div class="text-sm text-muted">Rak: {{ item.lokasiRak }}</div>
+                            </td>
+                            <td class="font-medium">{{ $filters.rupiah(item.harga) }}</td>
+                            <td class="text-center font-bold">{{ $filters.satuanBuah(item.qty) }}</td>
+                            <td class="text-center text-muted">{{ $filters.satuanBuah(item.safety) }}</td>
+                            <td>
+                                <status-badge
+                                    :qty="item.qty"
+                                    :safety="item.safety"
+                                    :catatan="item.catatanHTML">
+                                </status-badge>
+                            </td>
+                            <td>
+                                <div class="flex gap-xs">
+                                    <button type="button" @click="openEditModal(item)" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
+                                        Edit Stok
+                                    </button>
+                                    <button type="button" @click="requestDelete(item)" class="btn btn-danger-outline" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-if="filteredStock.length === 0">
+                            <td colspan="8" class="text-center text-muted" style="padding: 2rem;">
+                                Data tidak ditemukan. Silakan sesuaikan filter pencarian.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- New Materials Modal -->
+        <div class="modal-overlay" :class="{ active: isAddModalOpen }" @click.self="closeAddModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3 class="modal-title">Tambah Bahan Ajar Baru</h3>
+                    <button type="button" @click="closeAddModal" class="modal-close-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <form @submit.prevent="submitAddStock">
+                    <div class="modal-body flex-col gap-sm" style="display: flex;">
+                        <div class="flex gap-sm">
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label font-medium text-sm">Kode Barang *</label>
+                                <input type="text" v-model.trim="formAdd.kode" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.kode }" placeholder="Mis: EKMA4116">
+                                <span v-if="addErrors.kode" class="field-error">{{ addErrors.kode }}</span>
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label class="form-label font-medium text-sm">Judul / Nama Barang *</label>
+                                <input type="text" v-model.trim="formAdd.judul" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.judul }" placeholder="Masukkan judul...">
+                                <span v-if="addErrors.judul" class="field-error">{{ addErrors.judul }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-sm">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">UT Daerah (UPBJJ) *</label>
+                                <select v-model="formAdd.upbjj" class="form-select" :class="{ 'is-invalid': addErrors.upbjj }">
+                                    <option value="" disabled>Pilih UPBJJ</option>
+                                    <option v-for="daerah in upbjjList" :key="daerah" :value="daerah">{{ daerah }}</option>
+                                </select>
+                                <span v-if="addErrors.upbjj" class="field-error">{{ addErrors.upbjj }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Kategori *</label>
+                                <select v-model="formAdd.kategori" class="form-select" :class="{ 'is-invalid': addErrors.kategori }">
+                                    <option value="" disabled>Pilih Kategori</option>
+                                    <option v-for="kat in kategoriList" :key="kat" :value="kat">{{ kat }}</option>
+                                </select>
+                                <span v-if="addErrors.kategori" class="field-error">{{ addErrors.kategori }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-sm">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Stok Awal (Qty) *</label>
+                                <input type="number" v-model.number="formAdd.qty" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.qty }" min="0">
+                                <span v-if="addErrors.qty" class="field-error">{{ addErrors.qty }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Safety Stock *</label>
+                                <input type="number" v-model.number="formAdd.safety" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.safety }" min="1">
+                                <span v-if="addErrors.safety" class="field-error">{{ addErrors.safety }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-sm">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Lokasi Rak *</label>
+                                <input type="text" v-model.trim="formAdd.lokasiRak" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.lokasiRak }" placeholder="Mis: R1-A3">
+                                <span v-if="addErrors.lokasiRak" class="field-error">{{ addErrors.lokasiRak }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Harga (Rp) *</label>
+                                <input type="number" v-model.number="formAdd.harga" @keyup.enter="submitAddStock" class="form-input" :class="{ 'is-invalid': addErrors.harga }" min="1">
+                                <span v-if="addErrors.harga" class="field-error">{{ addErrors.harga }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label font-medium text-sm">Catatan (Bisa format HTML)</label>
+                            <input type="text" v-model="formAdd.catatanHTML" @keyup.enter="submitAddStock" class="form-input" placeholder="Mis: <em>Edisi 2026</em>">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" @click="closeAddModal" class="btn btn-outline">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Stok Baru</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Stock Edit Modal -->
+        <div class="modal-overlay" :class="{ active: isEditModalOpen }" @click.self="closeEditModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3 class="modal-title">Perbarui Stok: <span class="text-primary">{{ formEdit.kode }}</span></h3>
+                    <button type="button" @click="closeEditModal" class="modal-close-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <form @submit.prevent="submitEditStock">
+                    <div class="modal-body flex-col gap-sm" style="display: flex;">
+                        <p class="text-sm text-muted mb-xs">
+                            Perbarui jumlah fisik atau batas aman untuk bahan ajar <strong>{{ formEdit.judul }}</strong> (tekan <strong>Enter</strong> untuk menyimpan).
+                        </p>
+
+                        <div class="flex gap-sm">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Jumlah Stok Fisik (Qty) *</label>
+                                <input type="number" v-model.number="formEdit.qty" @keyup.enter="submitEditStock" class="form-input" :class="{ 'is-invalid': editErrors.qty }" min="0">
+                                <span v-if="editErrors.qty" class="field-error">{{ editErrors.qty }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Batas Reorder (Safety Stock) *</label>
+                                <input type="number" v-model.number="formEdit.safety" @keyup.enter="submitEditStock" class="form-input" :class="{ 'is-invalid': editErrors.safety }" min="1">
+                                <span v-if="editErrors.safety" class="field-error">{{ editErrors.safety }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-sm">
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Lokasi Rak Baru *</label>
+                                <input type="text" v-model.trim="formEdit.lokasiRak" @keyup.enter="submitEditStock" class="form-input" :class="{ 'is-invalid': editErrors.lokasiRak }">
+                                <span v-if="editErrors.lokasiRak" class="field-error">{{ editErrors.lokasiRak }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label font-medium text-sm">Harga (Rp) *</label>
+                                <input type="number" v-model.number="formEdit.harga" @keyup.enter="submitEditStock" class="form-input" :class="{ 'is-invalid': editErrors.harga }" min="1">
+                                <span v-if="editErrors.harga" class="field-error">{{ editErrors.harga }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label font-medium text-sm">Catatan (HTML)</label>
+                            <input type="text" v-model="formEdit.catatanHTML" @keyup.enter="submitEditStock" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" @click="closeEditModal" class="btn btn-outline">Batal</button>
+                        <button type="submit" class="btn btn-primary">Perbarui Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>

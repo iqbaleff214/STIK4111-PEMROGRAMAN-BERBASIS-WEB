@@ -1,4 +1,5 @@
 app.component('ba-stock-table', {
+    name: 'StockTable',
     template: '#tpl-stock',
     props: {
         items: { type: Array, required: true },
@@ -161,5 +162,10 @@ app.component('ba-stock-table', {
         requestDelete(item) {
             this.$emit('delete-stock', item);
         }
-    }
+    },
+    created() {
+        console.log('[StockTable] Component created');
+        console.log('[StockTable] filters:', this.filters);
+        console.log('[StockTable] data:', this.$data);
+    },
 });
