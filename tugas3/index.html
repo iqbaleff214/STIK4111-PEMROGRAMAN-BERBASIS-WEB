@@ -117,7 +117,7 @@
     <script src="js/components/order-form.js"></script>
     <script>
         async function bootstrapApp() {
-            const templatePaths = [
+            const paths = [
                 'templates/dashboard-view.html',
                 'templates/stock-table.html',
                 'templates/status-badge.html',
@@ -127,16 +127,10 @@
             ];
 
             const templates = await Promise.all(
-                templatePaths.map(path => fetch(`${path}?v=4`, { cache: 'no-store' }).then(res => res.text()))
+                paths.map(path => fetch(path).then(res => res.text()))
             );
 
-            dashboardTemplates.forEach((template, index) => {
-                console.log(`[DEBUG] tpl-dashboard ${index}:`, template.innerHTML);
-                console.log(
-                    `[DEBUG] Contains filters.search:`,
-                    template.innerHTML.includes('filters.search')
-                );
-            });
+            document.body.insertAdjacentHTML('beforeend', templates.join('\n'));
             app.mount('#app');
         }
 
